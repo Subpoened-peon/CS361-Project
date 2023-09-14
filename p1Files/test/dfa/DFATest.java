@@ -421,7 +421,7 @@ private DFA dfa4() {
 	assertTrue(dfa.setFinal("q1"));
 
 	assertFalse(dfa.addState("q4"));
-	assertFalse(dfa.setStart("q3"));
+	assertFalse(dfa.setStart("qq"));
 	assertFalse(dfa.setFinal("a"));
 
 	assertTrue(dfa.addTransition("q1", "q2", 'a'));
@@ -549,5 +549,135 @@ public void test4_6() {
 	assertFalse(dfaSwap.accepts("cabccbaa"));
 	
 	System.out.println("dfa4Swap accept pass");
+}
+
+//------------------- dfa5 tests ----------------------//
+private DFA dfa5() {
+	DFA dfa = new DFA();
+	dfa.addSigma('g');
+	dfa.addSigma('s');
+	dfa.addSigma('r');
+
+	assertTrue(dfa.addState("1"));
+	assertTrue(dfa.addState("2"));
+	assertTrue(dfa.addState("3"));
+	assertTrue(dfa.addState("4"));
+	assertTrue(dfa.addState("5"));
+
+	assertTrue(dfa.setStart("1"));
+	assertTrue(dfa.setFinal("3"));
+	assertTrue(dfa.setFinal("5"));
+	
+	return dfa;
+}
+
+@Test
+public void test5_1() {
+	DFA dfa = dfa5();
+
+	System.out.println("dfa5 instantiation pass");
+}
+
+@Test
+public void test5_2() {
+
+}
+
+@Test
+public void test5_3() {
+
+}
+
+@Test
+public void test5_4() {
+
+}
+
+@Test
+public void test5_5() {
+
+}
+
+@Test
+public void test5_6() {
+
+}
+
+//------------------- dfa6 tests ----------------------//
+private DFA dfa6() {
+	DFA dfa = new DFA();
+
+	return dfa;
+}
+
+@Test
+public void test6_1() {
+	DFA dfa = dfa6();
+
+	System.out.println("dfa6 instantiation pass");
+}
+
+@Test
+public void test6_2() {
+
+}
+
+@Test
+public void test6_3() {
+
+}
+
+@Test
+public void test6_4() {
+
+}
+
+@Test
+public void test6_5() {
+
+}
+
+@Test
+public void test6_6() {
+
+}
+
+//------------------- dfa7 tests ----------------------//
+private DFA dfa7() {
+	DFA dfa = new DFA();
+
+	return dfa;
+}
+
+@Test
+public void test7_1() {
+	DFA dfa = dfa7();
+
+	System.out.println("dfa7 instantiation pass");
+}
+
+@Test
+public void test7_2() {
+
+}
+
+@Test
+public void test7_3() {
+
+}
+
+@Test
+public void test7_4() {
+
+}
+
+@Test
+public void test7_5() {
+
+}
+
+@Test
+public void test7_6() {
+
 }
 }
