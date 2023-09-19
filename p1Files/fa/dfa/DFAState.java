@@ -12,5 +12,5 @@ public class DFAState /*hi this is kai*/ extends State{
         return "";
     }
 
-
+    
 }
