@@ -7,7 +7,16 @@ import java.util.Iterator;
 import java.util.Map;
 
 import fa.State;
-
+/**
+ * This class is a software representation to a DFA machine that implements the DFAInterface. 
+ * It contains the states (which are stored as DFAState objects), which are final and which is the initial, 
+ * the alphabet and the transitions that the states have. It allows allows for checking if strings are accepted
+ * in the created machine as well as swapping transitions based on the symbol.
+ * @author Nicholas Merritt
+ * @author Kai Sorensen
+ * @version best one
+ * @since forever
+ */
 public class DFA implements DFAInterface{
 
     private TreeSet<State> States;
@@ -16,7 +25,10 @@ public class DFA implements DFAInterface{
     private Map<State, Map<Character, State>> Transitions;
     private State stStart;
 
-    //RETURN FOR JAVADOC
+    /**
+     * This constructor is used to create a new machine from scratch. Most often used for the testing suite where
+     * values are added "manually" after the DFA is instantiated. 
+     */
     public DFA() {
         this.stStart = null;
         this.States = new TreeSet<State>();
@@ -25,7 +37,16 @@ public class DFA implements DFAInterface{
         this.Transitions  = new HashMap<State,Map<Character,State>>();
     }
 
-    //RETURN FoR JAVADoC
+    /**
+     * A constructor that takes the values of another DFA. This constructor is used for creating the swap DFA copy
+     * used for the swap method.
+     * 
+     * @param States The set of states copied from the original DFA
+     * @param FinalStates The set of Final states copied from the original DFA
+     * @param Alphabet The set of symbols of the alphabet from the original DFA
+     * @param Transitions The Transitions that existed for the states of the original DFA
+     * @param stStart The initial state for the original DFA
+     */
     public DFA(TreeSet<State> States, TreeSet<State> FinalStates, TreeSet<Character> Alphabet, 
     Map<State, Map<Character, State>> Transitions, State stStart) {
         this.stStart = stStart;
@@ -144,6 +165,7 @@ public class DFA implements DFAInterface{
         }
         if(from != null && to != null && Alphabet.contains(onSymb)) {
             check = true;
+            //This instance acts as a transition without a starting state.
             Map<Character, State> destination = new HashMap<Character, State>();
             destination.put(onSymb, to);
             Transitions.put(from, destination);
