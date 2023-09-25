@@ -7,7 +7,12 @@ import java.util.Set;
 import org.junit.Test;
 
 import fa.dfa.DFA;
-
+/**
+ * This class is the testing suite for the DFA class.
+ * 
+ * @author Nicholas Merritt
+ * @author Kai Sorensen
+ */
 public class DFATest {
 	
 	
