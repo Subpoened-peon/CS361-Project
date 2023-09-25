@@ -36,15 +36,15 @@ public class DFA implements DFAInterface{
     }
 
     public boolean addState(String name) {
-        boolean check = false;
+        
         Iterator<State> stCheck = States.iterator();
         while(stCheck.hasNext()) {
-            if(!stCheck.next().getName().equals(name)) {
-                States.add(new DFAState(name));
-                check = true;
+            if(stCheck.next().getName().equals(name)) {
+                return false;
             }
         }
-        return check;
+        States.add(new DFAState(name));
+        return true;
     }
     
     public boolean setFinal(String name) {
@@ -74,9 +74,26 @@ public class DFA implements DFAInterface{
     public void addSigma(char symbol) {
         Alphabet.add(symbol);
     }
-    //return to//
+    
     public boolean accepts(String s) {
-        
+        int charIndex = 0;
+        char currentTransition = s.charAt(charIndex++);
+        State currentState = stStart;
+
+        while(true) {
+            //if there exists a transition from the current state with the current transition
+            if(Transitions.get(currentState).containsKey(currentTransition)) {
+                currentState = Transitions.get(currentState).get(currentTransition);
+                currentTransition = s.charAt(charIndex++);
+            }
+            //if we're at the final state and we've gone through the whole string
+            else if (FinalStates.contains(currentState) && charIndex == s.length()){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     }
 
     public Set<Character> getSigma() {
