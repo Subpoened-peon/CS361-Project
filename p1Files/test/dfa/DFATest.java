@@ -493,9 +493,9 @@ public void test4_4() {
 			+ "Sigma = {a b c}\n"
 			+ "delta =\n"
 			+ "		a	b	c\n"
-			+ "q1	q2	err err\n"
+			+ "q1	q2	e e\n"
 			+ "q2	q1	q2	q3\n"
-			+ "q3	q3	q2	err\n"
+			+ "q3	q3	q2	e\n"
 			+ "q0 = q1\n"
 			+ "F = {q1}\n";
 	
