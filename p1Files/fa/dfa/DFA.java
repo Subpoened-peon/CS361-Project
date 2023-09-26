@@ -107,6 +107,7 @@ public class DFA implements DFAInterface{
         while(charIndex < s.length()) {
             currentTransition = s.charAt(charIndex);
             for(int i = 0; i < Transitions.get(currentState).size(); i++) {
+                //ugliest condition of all time from Kai
                 if(Transitions.get(currentState).get(i).containsKey(currentTransition)) {
                     currentState = Transitions.get(currentState).get(i).get(currentTransition);
                     break;
