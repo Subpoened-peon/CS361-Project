@@ -101,7 +101,6 @@ public class DFA implements DFAInterface{
     public void addSigma(char symbol) {
         Alphabet.add(symbol);
     }
-    
     public boolean accepts(String s) {
         int charIndex = 0;
         char currentTransition;
