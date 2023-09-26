@@ -40,6 +40,7 @@ public class DFA implements DFAInterface{
         this.Transitions  = new HashMap<DFAState,ArrayList<Map<Character,DFAState>>>();
     }
 
+
     /**
      * A constructor that takes the values of another DFA. This constructor is used for creating the swap DFA copy
      * used for the swap method.
@@ -185,22 +186,37 @@ public class DFA implements DFAInterface{
         return check;
     }
 
+    private void copyStart(DFAState s) {
+        stStart = s;
+    }
+
     @Override
     public DFA swap(char symb1, char symb2) {
-        DFA swap;
-        for (List<Map<Character, DFAState>> stateTransitions : Transitions.values()) {
-            for (Map<Character, DFAState> transition : stateTransitions) {
-                DFAState stateForSymb1 = transition.get(symb1);
-                DFAState stateForSymb2 = transition.get(symb2);
-
-                // Swap the transitions for the symbols
-                if (stateForSymb1 != null && stateForSymb2 != null) {
-                    transition.put(symb1, stateForSymb2);
-                    transition.put(symb2, stateForSymb1);
+        DFA swap = new DFA();
+        swap.copyStart(stStart);
+        swap.setStart(stStart.getName());
+        for(DFAState state : States) {
+            swap.addState(state.getName());
+        }
+        for(DFAState state : FinalStates) {
+            swap.setFinal(state.getName());
+        }
+        for(Character c : Alphabet) {
+            swap.addSigma(c.charValue());
+        }
+        for(DFAState key : Transitions.keySet()) {
+            for(Map<Character, DFAState> element : Transitions.get(key)) {
+                for(Character c : element.keySet()) {
+                    if(c == symb1){
+                        swap.addTransition(key.getName(),  element.get(c).getName(), symb2);
+                    } else if (c == symb2){
+                        swap.addTransition(key.getName(),  element.get(c).getName(), symb1);
+                    } else {
+                        swap.addTransition(key.getName(),  element.get(c).getName(), c);
+                    }
                 }
             }
         }
-        swap = new DFA(this.States, this.FinalStates, this.Alphabet, Transitions, this.stStart);
         return swap;
     }
     
