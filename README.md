@@ -23,8 +23,7 @@ find . -name "*.java" -exec javac {} \;
 To run the tester, locate the "test" folder within the main directory and run the following command:
 ```
 java DFATest
-```
-
+``` 
 
 ## Sources Used
 https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html

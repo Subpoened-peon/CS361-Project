@@ -1,9 +1,11 @@
 package fa.dfa;
 
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
@@ -185,8 +187,64 @@ public class DFA implements DFAInterface{
 
     @Override
     public DFA swap(char symb1, char symb2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'swap'");
+        DFA swap;
+        for (List<Map<Character, DFAState>> stateTransitions : Transitions.values()) {
+            for (Map<Character, DFAState> transition : stateTransitions) {
+                DFAState stateForSymb1 = transition.get(symb1);
+                DFAState stateForSymb2 = transition.get(symb2);
+
+                // Swap the transitions for the symbols
+                if (stateForSymb1 != null && stateForSymb2 != null) {
+                    transition.put(symb1, stateForSymb2);
+                    transition.put(symb2, stateForSymb1);
+                }
+            }
+        }
+        swap = new DFA(this.States, this.FinalStates, this.Alphabet, Transitions, this.stStart);
+        return swap;
     }
     
+    /**
+     * a to string method that prints out the set of DFAStates, the alphabet, the initial state,
+     * the set of final states, and the transitions for each state.
+     * @return a string of the 5-tuple variables
+     */
+    public String toString() {
+        String variables = "Q={ ";
+        String Q = "";
+        String sigma = "";
+        Stack<String> stStack = new Stack<>();
+        Stack<String> fiStack = new Stack<>();
+
+        for(DFAState state : States) {
+            stStack.push(state.getName());
+        }
+        while(!stStack.isEmpty()) {
+            Q += stStack.pop() + " ";
+        }
+
+        variables += Q + "}\nSigma = { ";
+
+        for(Character syms : Alphabet) {
+            sigma += syms + " ";
+        }
+
+        variables += sigma + "}\ndelta =\n \t" + sigma + "\n";
+
+        for(DFAState state : States) {
+            
+        }
+
+        variables += "q0 = " + stStart.getName() + "\n" + "F = { ";
+
+        for(DFAState state : FinalStates) {
+            fiStack.push(state.getName());
+        }
+        while(!fiStack.isEmpty()) {
+            variables += fiStack.pop() + " ";
+        }
+        variables += "}";
+
+        return variables;
+    }
 }

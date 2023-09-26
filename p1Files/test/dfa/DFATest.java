@@ -498,9 +498,9 @@ public void test4_4() {
 			+ "Sigma = {a b c}\n"
 			+ "delta =\n"
 			+ "		a	b	c\n"
-			+ "q1	q2	qerr qerr\n"
+			+ "q1	q2	- -\n"
 			+ "q2	q1	q2	q3\n"
-			+ "q3	q3	q2	qerr\n"
+			+ "q3	q3	q2	-\n"
 			+ "q0 = q1\n"
 			+ "F = {q1}\n";
 	
@@ -657,11 +657,11 @@ public void test5_4() {
 			+ "Sigma = {g s r}\n"
 			+ "delta =\n"
 			+ "		g	s	r\n"
-			+ "1	2	1 qerr\n"
+			+ "1	2	1 -\n"
 			+ "2	3	2	1\n"
 			+ "3	4	3	2\n"
 			+ "4	5	4	3\n"
-			+ "5	qerr	5	4\n"
+			+ "5	-	5	4\n"
 			+ "q0 = 1\n"
 			+ "F = {3 5}\n";
 	
@@ -955,7 +955,7 @@ public void test7_1() {
 
 @Test
 public void test7_2() {
-	DFA dfa = dfa6();
+	DFA dfa = dfa7();
 	assertNotNull(dfa.getState("A"));
 	assertNotNull(dfa.getState("B"));
 	assertNotNull(dfa.getState("C"));
