@@ -13,7 +13,7 @@ If I could go back in time I would definitely tell myself not to overthink the D
 
 ## Compiling and Using
 
-To run this code, the user will want to find the 
+To run this code, the user will want to find the directory containing the p1- files. 
 
 ## Sources Used
 https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html
