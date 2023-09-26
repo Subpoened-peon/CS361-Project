@@ -19,11 +19,11 @@ import fa.State;
  */
 public class DFA implements DFAInterface{
 
-    private TreeSet<State> States;
-    private TreeSet<State> FinalStates;
+    private TreeSet<DFAState> States;
+    private TreeSet<DFAState> FinalStates;
     private TreeSet<Character> Alphabet;
-    private Map<State, Map<Character, State>> Transitions;
-    private State stStart;
+    private Map<DFAState, Map<Character, DFAState>> Transitions;
+    private DFAState stStart;
 
     /**
      * This constructor is used to create a new machine from scratch. Most often used for the testing suite where
@@ -31,10 +31,10 @@ public class DFA implements DFAInterface{
      */
     public DFA() {
         this.stStart = null;
-        this.States = new TreeSet<State>();
-        this.FinalStates = new TreeSet<State>();
+        this.States = new TreeSet<DFAState>();
+        this.FinalStates = new TreeSet<DFAState>();
         this.Alphabet = new TreeSet<Character>();
-        this.Transitions  = new HashMap<State,Map<Character,State>>();
+        this.Transitions  = new HashMap<DFAState,Map<Character,DFAState>>();
     }
 
     /**
@@ -47,8 +47,8 @@ public class DFA implements DFAInterface{
      * @param Transitions The Transitions that existed for the states of the original DFA
      * @param stStart The initial state for the original DFA
      */
-    public DFA(TreeSet<State> States, TreeSet<State> FinalStates, TreeSet<Character> Alphabet, 
-    Map<State, Map<Character, State>> Transitions, State stStart) {
+    public DFA(TreeSet<DFAState> States, TreeSet<DFAState> FinalStates, TreeSet<Character> Alphabet, 
+    Map<DFAState, Map<Character, DFAState>> Transitions, DFAState stStart) {
         this.stStart = stStart;
         this.States = States;
         this.FinalStates = FinalStates;
@@ -58,7 +58,7 @@ public class DFA implements DFAInterface{
 
     public boolean addState(String name) {
         
-        Iterator<State> stCheck = States.iterator();
+        Iterator<DFAState> stCheck = States.iterator();
         while(stCheck.hasNext()) {
             if(stCheck.next().getName().equals(name)) {
                 return false;
@@ -70,7 +70,7 @@ public class DFA implements DFAInterface{
     
     public boolean setFinal(String name) {
         boolean check = false;
-        Iterator<State> stCheck = States.iterator();
+        Iterator<DFAState> stCheck = States.iterator();
         while(stCheck.hasNext()) {
             if(stCheck.next().getName().equals(name)) {
                 FinalStates.add(new DFAState(name));
@@ -82,10 +82,13 @@ public class DFA implements DFAInterface{
     
     public boolean setStart(String name) {
         boolean check = false;
-        Iterator<State> stCheck = States.iterator();
+        Iterator<DFAState> stCheck = States.iterator();
+
+
         while(stCheck.hasNext()) {
-            if(stCheck.next().getName().equals(name)) {
-                this.stStart = stCheck.next();
+            DFAState current = stCheck.next();
+            if(current.getName().equals(name)) {
+                this.stStart = current;
                 check = true;
             }
         }
@@ -98,17 +101,17 @@ public class DFA implements DFAInterface{
     
     public boolean accepts(String s) {
         int charIndex = 0;
-        char currentTransition = s.charAt(charIndex++);
+        char currentTransition = s.charAt(charIndex);
         State currentState = stStart;
 
         while(true) {
-            //if there exists a transition from the current state with the current transition
-            if(Transitions.get(currentState).containsKey(currentTransition)) {
+            //if there exists a transition from the current state on the current transition
+            if(Transitions.get(currentState).containsKey(currentTransition) && charIndex < s.length()) {
                 currentState = Transitions.get(currentState).get(currentTransition);
                 currentTransition = s.charAt(charIndex++);
             }
             //if we're at the final state and we've gone through the whole string
-            else if (FinalStates.contains(currentState) && charIndex == s.length()){
+            else if (this.isFinal(currentState.getName()) && charIndex == s.length()){
                 return true;
             }
             else {
@@ -149,24 +152,22 @@ public class DFA implements DFAInterface{
 
     public boolean addTransition(String fromState, String toState, char onSymb) {
         boolean check = false;
-        State from = null;
-        State to = null;
-        Iterator<State> stCheck = States.iterator();
+        DFAState from = null;
+        DFAState to = null;
+        Iterator<DFAState> stCheck = States.iterator();
         while(stCheck.hasNext()) {
-            if(stCheck.next().getName().equals(fromState)) {
-                from = stCheck.next();
+            DFAState current = stCheck.next();
+            if(current.getName().equals(fromState)){
+                from = current;
             }
-            if(from.getName() == toState) {
-                to = from;
-            }
-            if(stCheck.next().getName().equals(toState)) {
-                to = stCheck.next();
+            if(current.getName().equals(toState)){
+                to = current;
             }
         }
         if(from != null && to != null && Alphabet.contains(onSymb)) {
             check = true;
             //This instance acts as a transition without a starting state.
-            Map<Character, State> destination = new HashMap<Character, State>();
+            Map<Character, DFAState> destination = new HashMap<Character, DFAState>();
             destination.put(onSymb, to);
             Transitions.put(from, destination);
         }
