@@ -99,32 +99,26 @@ public class DFA implements DFAInterface{
     public void addSigma(char symbol) {
         Alphabet.add(symbol);
     }
-    
     public boolean accepts(String s) {
         int charIndex = 0;
-        char currentTransition = s.charAt(charIndex);
+        char currentTransition;
         State currentState = stStart;
 
-        outerloop:
-        while(charIndex <= s.length()) {
-            //if there exists a transition from the current state on the current transition
-            for(int i = 0; i < Transitions.get(currentState).size(); i++) 
-            {
-                if(Transitions.get(currentState).get(i).containsKey(currentTransition) && charIndex < s.length()) {
+        while(charIndex < s.length()) {
+            currentTransition = s.charAt(charIndex);
+            for(int i = 0; i < Transitions.get(currentState).size(); i++) {
+                if(Transitions.get(currentState).get(i).containsKey(currentTransition)) {
                     currentState = Transitions.get(currentState).get(i).get(currentTransition);
-                    currentTransition = s.charAt(charIndex++);
-                    continue outerloop;
+                    break;
+                } else if(i == Transitions.get(currentState).size() - 1) {
+                    return false;
                 }
             }
 
-            //if we're at the final state and we've gone through the whole string
-            if (this.isFinal(currentState.getName()) && charIndex == s.length()){
-                return true;
-            } else {
-                return false;
-            }
+            charIndex++;
         }
-        return false;
+ 
+        return this.isFinal(currentState.getName());
     }
 
     public Set<Character> getSigma() {
