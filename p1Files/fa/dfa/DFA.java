@@ -1,7 +1,6 @@
 package fa.dfa;
 
 import java.util.Set;
-import java.util.Stack;
 import java.util.TreeSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,6 +26,9 @@ public class DFA implements DFAInterface{
     private TreeSet<Character> Alphabet;
     private Map<DFAState, ArrayList<Map<Character, DFAState>>> Transitions;
     private DFAState stStart;
+    private ArrayList<String> Q;
+    private ArrayList<String> Final;
+    private ArrayList<Character> Sigma;
 
     /**
      * This constructor is used to create a new machine from scratch. Most often used for the testing suite where
@@ -38,6 +40,9 @@ public class DFA implements DFAInterface{
         this.FinalStates = new TreeSet<DFAState>();
         this.Alphabet = new TreeSet<Character>();
         this.Transitions  = new HashMap<DFAState,ArrayList<Map<Character,DFAState>>>();
+        this.Q = new ArrayList<String>();
+        this.Final = new ArrayList<String>();
+        this.Sigma = new ArrayList<Character>();
     }
 
     /**
@@ -67,7 +72,8 @@ public class DFA implements DFAInterface{
                 return false;
             }
         }
-        States.add(new DFAState(name));
+        this.Q.add(name);
+        this.States.add(new DFAState(name));
         return true;
     }
     
@@ -76,6 +82,7 @@ public class DFA implements DFAInterface{
         Iterator<DFAState> stCheck = States.iterator();
         while(stCheck.hasNext()) {
             if(stCheck.next().getName().equals(name)) {
+                Final.add(name);
                 FinalStates.add(new DFAState(name));
                 check = true;
             }
@@ -99,8 +106,10 @@ public class DFA implements DFAInterface{
     }
 
     public void addSigma(char symbol) {
+        this.Sigma.add(symbol);
         Alphabet.add(symbol);
     }
+
     public boolean accepts(String s) {
         int charIndex = 0;
         char currentTransition;
@@ -127,8 +136,8 @@ public class DFA implements DFAInterface{
         return this.Alphabet;
     }
 
-    public State getState(String name) {
-        for(State state : States) {
+    public DFAState getState(String name) {
+        for(DFAState state : States) {
             if(state.getName().equals(name)){
                 return state;
             }
@@ -184,7 +193,6 @@ public class DFA implements DFAInterface{
         return check;
     }
 
-    @Override
     public DFA swap(char symb1, char symb2) {
         DFA swap;
         for (List<Map<Character, DFAState>> stateTransitions : Transitions.values()) {
@@ -210,37 +218,51 @@ public class DFA implements DFAInterface{
      */
     public String toString() {
         String variables = "Q={ ";
-        String Q = "";
         String sigma = "";
-        Stack<String> stStack = new Stack<>();
-        Stack<String> fiStack = new Stack<>();
-
-        for(DFAState state : States) {
-            stStack.push(state.getName());
+        for (int i = 0; i < Q.size(); i++) {
+            variables += Q.get(i) + " ";
         }
-        while(!stStack.isEmpty()) {
-            Q += stStack.pop() + " ";
+        variables += "}\n Sigma = { ";
+        for (int i = 0; i < Sigma.size(); i++) {
+            variables += Sigma.get(i) + " ";
         }
 
-        variables += Q + "}\nSigma = { ";
-
-        for(Character syms : Alphabet) {
-            sigma += syms + " ";
+        variables += sigma + "}\ndelta =\n \t";
+        for (int i = 0; i < Sigma.size(); i++) {
+            variables += Sigma.get(i) + " ";
         }
+        variables += "\n";
 
-        variables += sigma + "}\ndelta =\n \t" + sigma + "\n";
-
-        for(DFAState state : States) {
-            
+        for (int i = 0; i < Q.size(); i++) {
+            variables += Q.get(i) + "\t";
+            DFAState state = this.getState(Q.get(i));
+            for (int j = 0; j < Sigma.size(); j++) {
+                ArrayList<Map<Character, DFAState>> transition = Transitions.get(state);
+                char symbol = Sigma.get(j);
+                
+                boolean transitionFound = false; // Flag to check if a transition was found
+                
+                for (int k = 0; k < transition.size(); k++) {
+                    Map<Character, DFAState> symbolTransition = transition.get(k);
+                    
+                    if (symbolTransition.containsKey(symbol)) {
+                        DFAState nextState = symbolTransition.get(symbol);
+                        variables += nextState.getName() + " ";
+                        transitionFound = true;
+                        break; // Exit the loop once a valid transition is found
+                    }
+                }
+                
+                if (!transitionFound) {
+                    variables += "e ";
+                }
+            }
+            variables += "\n";
         }
 
         variables += "q0 = " + stStart.getName() + "\n" + "F = { ";
-
-        for(DFAState state : FinalStates) {
-            fiStack.push(state.getName());
-        }
-        while(!fiStack.isEmpty()) {
-            variables += fiStack.pop() + " ";
+        for (int i = 0; i < Final.size(); i++) {
+            variables += Final.get(i) + " ";
         }
         variables += "}";
 

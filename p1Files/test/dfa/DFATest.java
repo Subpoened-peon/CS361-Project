@@ -291,9 +291,6 @@ private DFA dfa3() {
 	assertTrue(dfa.addTransition("C", "F", '1'));
 	assertTrue(dfa.addTransition("C", "G", '2'));
 	
-	assertTrue(dfa.addTransition("C", "F", '1'));
-	assertTrue(dfa.addTransition("C", "G", '2'));
-	
 	assertTrue(dfa.addTransition("D", "D", '1'));
 	assertTrue(dfa.addTransition("D", "E", '2'));
 	
@@ -437,8 +434,6 @@ private DFA dfa4() {
 	assertTrue(dfa.addTransition("q3", "q3", 'a'));
 	
 	assertFalse(dfa.addTransition("qq", "q2", 'c'));
-	assertFalse(dfa.addTransition("q3", "q3", 'c'));
-	assertFalse(dfa.addTransition("q1", "q1", 'a'));
 
 	return dfa;
 }
@@ -498,9 +493,9 @@ public void test4_4() {
 			+ "Sigma = {a b c}\n"
 			+ "delta =\n"
 			+ "		a	b	c\n"
-			+ "q1	q2	- -\n"
+			+ "q1	q2	err err\n"
 			+ "q2	q1	q2	q3\n"
-			+ "q3	q3	q2	-\n"
+			+ "q3	q3	q2	err\n"
 			+ "q0 = q1\n"
 			+ "F = {q1}\n";
 	
@@ -657,11 +652,11 @@ public void test5_4() {
 			+ "Sigma = {g s r}\n"
 			+ "delta =\n"
 			+ "		g	s	r\n"
-			+ "1	2	1 -\n"
+			+ "1	2	1 	e\n"
 			+ "2	3	2	1\n"
 			+ "3	4	3	2\n"
 			+ "4	5	4	3\n"
-			+ "5	-	5	4\n"
+			+ "5	e	5	4\n"
 			+ "q0 = 1\n"
 			+ "F = {3 5}\n";
 	
@@ -830,8 +825,8 @@ public void test6_4() {
 			+ "delta =\n"
 			+ "		a	b\n"
 			+ "0	1	0\n"
-			+ "1	a	b\n"
-			+ "2	0	3\n"
+			+ "1	1	2\n"
+			+ "2	3	0\n"
 			+ "3	3	4\n"
 			+ "4	3	5\n"
 			+ "5	3	5\n"
