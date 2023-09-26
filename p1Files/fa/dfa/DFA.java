@@ -5,6 +5,7 @@ import java.util.TreeSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ArrayList;
 
 import fa.State;
 /**
@@ -22,7 +23,7 @@ public class DFA implements DFAInterface{
     private TreeSet<DFAState> States;
     private TreeSet<DFAState> FinalStates;
     private TreeSet<Character> Alphabet;
-    private Map<DFAState, Map<Character, DFAState>> Transitions;
+    private Map<DFAState, ArrayList<Map<Character, DFAState>>> Transitions;
     private DFAState stStart;
 
     /**
@@ -34,7 +35,7 @@ public class DFA implements DFAInterface{
         this.States = new TreeSet<DFAState>();
         this.FinalStates = new TreeSet<DFAState>();
         this.Alphabet = new TreeSet<Character>();
-        this.Transitions  = new HashMap<DFAState,Map<Character,DFAState>>();
+        this.Transitions  = new HashMap<DFAState,ArrayList<Map<Character,DFAState>>>();
     }
 
     /**
@@ -48,7 +49,7 @@ public class DFA implements DFAInterface{
      * @param stStart The initial state for the original DFA
      */
     public DFA(TreeSet<DFAState> States, TreeSet<DFAState> FinalStates, TreeSet<Character> Alphabet, 
-    Map<DFAState, Map<Character, DFAState>> Transitions, DFAState stStart) {
+    Map<DFAState, ArrayList<Map<Character, DFAState>>> Transitions, DFAState stStart) {
         this.stStart = stStart;
         this.States = States;
         this.FinalStates = FinalStates;
@@ -104,20 +105,26 @@ public class DFA implements DFAInterface{
         char currentTransition = s.charAt(charIndex);
         State currentState = stStart;
 
-        while(true) {
+        outerloop:
+        while(charIndex <= s.length()) {
             //if there exists a transition from the current state on the current transition
-            if(Transitions.get(currentState).containsKey(currentTransition) && charIndex < s.length()) {
-                currentState = Transitions.get(currentState).get(currentTransition);
-                currentTransition = s.charAt(charIndex++);
+            for(int i = 0; i < Transitions.get(currentState).size(); i++) 
+            {
+                if(Transitions.get(currentState).get(i).containsKey(currentTransition) && charIndex < s.length()) {
+                    currentState = Transitions.get(currentState).get(i).get(currentTransition);
+                    currentTransition = s.charAt(charIndex++);
+                    continue outerloop;
+                }
             }
+
             //if we're at the final state and we've gone through the whole string
-            else if (this.isFinal(currentState.getName()) && charIndex == s.length()){
+            if (this.isFinal(currentState.getName()) && charIndex == s.length()){
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
+        return false;
     }
 
     public Set<Character> getSigma() {
@@ -136,8 +143,9 @@ public class DFA implements DFAInterface{
     public boolean isFinal(String name) {
         boolean check = false;
         for(State s : FinalStates) {
-            if(s.getName().equals(name));
-            check = true;
+            if(s.getName().equals(name)) {
+                check = true;
+            }
         }
         return check;
     }
@@ -169,7 +177,13 @@ public class DFA implements DFAInterface{
             //This instance acts as a transition without a starting state.
             Map<Character, DFAState> destination = new HashMap<Character, DFAState>();
             destination.put(onSymb, to);
-            Transitions.put(from, destination);
+            if(Transitions.containsKey(from)) {
+                Transitions.get(from).add(destination);
+            } else {
+                ArrayList<Map<Character, DFAState>> newTransition = new ArrayList<Map<Character, DFAState>>();
+                newTransition.add(destination);
+                Transitions.put(from, newTransition);
+            }
         }
         return check;
     }
